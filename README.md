@@ -20,6 +20,52 @@ Report on missing updates on a Windows machine.
 
 At a minimum supply the download locations for the PSWindowsUpdate zip and the wsusscn2.cab file.
 
+## How it works
+
+This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers a user defined Scheduled Task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `pswindowsupdate_url`. Once the download requirments have been met, the PowerShell script attempls to load the module, import the wsusscn2.cab file and proceed with generating a report of the missing updates.
+
+### The Report
+
+The missing update report is consumed as an external fact. This is accomlishd by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`. An example of this file is below.
+
+```json
+{
+	"updatereporting_win": {
+		"scan_meta": {
+			"last_run_time": "01-19-2018 02:19:17 AM",
+			"wsusscn2_file_time": "01-10-2018 03:26:54 PM"
+		},
+		"update_meta": {
+			"missing_update_count": 2,
+			"missing_update": [
+				{
+					"KB": "KB3000483",
+					"Title": "Security Update for Windows Server 2012 R2 (KB3000483)",
+					"Size": "6MB",
+					"MsrcSeverity": "Critical",
+					"LastDeploymentChangeTime": "02-10-2015 12:00:00 AM"
+				},
+				{
+					"KB": "KB4048961",
+					"Title": "2017-11 Security Only Quality Update for Windows Server 2012 R2 for x64-based Systems (KB4048961)",
+					"Size": "23MB",
+					"MsrcSeverity": "Critical",
+					"LastDeploymentChangeTime": "11-14-2017 12:00:00 AM"
+				}
+			],
+			"missing_update_kbs": [
+				"KB3000483",
+				"KB4048961"
+			]
+		}
+	}
+}
+```
+
+### Download Behavior
+
+Downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
+
 ## Examples
 
 Download both external dependencies to `c:\Windows\Temp` and create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
@@ -74,6 +120,8 @@ This module leverages it's own copy of the PSWindowsUpdate module. The PSWindows
 ## Limitations
 
 Time of day scheduling is currently limited to a random time between 12:00AM and 5:59AM. 
+
+The code used to determine the remote file's last modified date has been tested on IIS and Artifactory.
 
 ## Know Issues
 
