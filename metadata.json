@@ -1,0 +1,32 @@
+{
+  "name": "jpi-updatereporting_win",
+  "version": "0.1.0",
+  "author": "Joey Piccola, Taylor Vories",
+  "summary": "Report on missing updates on a Windows machine.",
+  "license": "MIT",
+  "source": "https://github.com/joeypiccola/updatereporting_win",
+  "project_page": "https://github.com/joeypiccola/updatereporting_win",
+  "issues_url": "https://github.com/joeypiccola/update_reporting/issues",  
+  "dependencies": [
+    { "name": "puppetlabs/scheduled_task", "version_requirement": ">= 0.1.0" }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "windows",
+      "operatingsystemrelease": [
+        "2008 R2",
+        "2012 R2",
+        "10"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.7.0 < 6.0.0"
+    }
+  ],
+  "pdk-version": "1.1.0",
+  "template-url": "file://C:/PROGRA~1/PUPPET~1/DevelopmentKit/share/cache/pdk-module-template.git",
+  "template-ref": "heads/master-0-g54e88a4"
+}
