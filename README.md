@@ -30,35 +30,35 @@ The missing update report is consumed as an external fact. This is accomlishd by
 
 ```json
 {
-	"updatereporting_win": {
-		"scan_meta": {
-			"last_run_time": "01-19-2018 02:19:17 AM",
-			"wsusscn2_file_time": "01-10-2018 03:26:54 PM"
-		},
-		"update_meta": {
-			"missing_update_count": 2,
-			"missing_update": [
-				{
-					"KB": "KB3000483",
-					"Title": "Security Update for Windows Server 2012 R2 (KB3000483)",
-					"Size": "6MB",
-					"MsrcSeverity": "Critical",
-					"LastDeploymentChangeTime": "02-10-2015 12:00:00 AM"
-				},
-				{
-					"KB": "KB4048961",
-					"Title": "2017-11 Security Only Quality Update for Windows Server 2012 R2 for x64-based Systems (KB4048961)",
-					"Size": "23MB",
-					"MsrcSeverity": "Critical",
-					"LastDeploymentChangeTime": "11-14-2017 12:00:00 AM"
-				}
-			],
-			"missing_update_kbs": [
-				"KB3000483",
-				"KB4048961"
-			]
-		}
-	}
+  "updatereporting_win": {
+    "scan_meta": {
+      "last_run_time": "01-19-2018 02:19:17 AM",
+      "wsusscn2_file_time": "01-10-2018 03:26:54 PM"
+    },
+    "update_meta": {
+      "missing_update_count": 2,
+      "missing_update": [
+        {
+          "KB": "KB3000483",
+          "Title": "Security Update for Windows Server 2012 R2 (KB3000483)",
+          "Size": "6MB",
+          "MsrcSeverity": "Critical",
+          "LastDeploymentChangeTime": "02-10-2015 12:00:00 AM"
+        },
+        {
+          "KB": "KB4048961",
+          "Title": "2017-11 Security Only Quality Update for Windows Server 2012 R2 for x64-based Systems (KB4048961)",
+          "Size": "23MB",
+          "MsrcSeverity": "Critical",
+          "LastDeploymentChangeTime": "11-14-2017 12:00:00 AM"
+        }
+      ],
+      "missing_update_kbs": [
+        "KB3000483",
+        "KB4048961"
+      ]
+    }
+  }
 }
 ```
 
