@@ -98,7 +98,8 @@ try {
     }
 
     # import the pswindowesupdate module
-    Import-Module (Get-Item -Filter "*.psd1" -Path $PSWindowsUpdateDir).FullName -ErrorAction Stop
+    Import-Module (Get-ChildItem -Filter "*.psd1" -Path $PSWindowsUpdateDir -Recurse).FullName -ErrorAction Stop
+    #Import-Module (Get-Item -Filter "*.psd1" -Path $PSWindowsUpdateDir).FullName -ErrorAction Stop
     # get any previous Offline Service Managers and remove them manually
     $offlineServiceManagers = Get-WUServiceManager | ?{$_.name -eq 'Offline Sync Service'}
     if ($offlineServiceManagers) {
