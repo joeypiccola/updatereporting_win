@@ -141,6 +141,7 @@ try {
     $meta = [pscustomobject]@{
         scan_meta = $scan_meta
         update_meta = $update_meta
+        pswindowsupdate_version = 'tbd'
     }
 
     $fact_name = [pscustomobject]@{
