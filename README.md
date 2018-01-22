@@ -1,7 +1,7 @@
 
 # updatereporting_win
 
-Report on updates on a Windows machine.
+Puppet module to report on missing updates on a Windows machine.
 
 ## Parameters
 
