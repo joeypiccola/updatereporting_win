@@ -124,7 +124,7 @@ Import-Module : The version of the loaded Windows PowerShell is '3.0'. The modul
 2. Time of day scheduling is currently limited to a random time between 12:00AM and 5:59AM.
 3. The PowerShell script used to determine the remote wsusscn2.cab file's last modified date has been tested on IIS and Artifactory. Not all web servers will provide a last modified date when queried. 
 
-### Download Behavior
+## Download Behavior
 
 Downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
 
