@@ -28,7 +28,7 @@
 #
 # Copyright (C) 2016 Joey Piccola.
 #
-class puppet_win (
+class updatereporting_win (
 
   String $pswindowsupdate_url,
   String $wsusscn_url,
@@ -61,9 +61,9 @@ class puppet_win (
     }
   }
 
-  file { 'puppet_win_stage_file':
+  file { 'updatereporting_win_stage_file':
     ensure => 'present',
-    source => 'puppet:///modules/puppet_win/Invoke-WindowsUpdateReport.ps1',
+    source => 'puppet:///modules/updatereporting_win/Invoke-WindowsUpdateReport.ps1',
     path   => 'c:/windows/temp/Invoke-WindowsUpdateReport.ps1',
     before => Scheduled_task['updatereporting_win'],
   }
