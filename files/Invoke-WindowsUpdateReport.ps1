@@ -136,12 +136,12 @@ try {
     $scan_meta = [pscustomobject]@{
         last_run_time = (Get-Date -Format "MM-dd-yyyy hh:mm:ss tt")
         wsusscn2_file_time = (Get-Item -Path $WSUSscnCabFilePath).lastwritetime.ToString("MM-dd-yyyy hh:mm:ss tt")
+        pswindowsupdate_version = 'tbd'
     }
 
     $meta = [pscustomobject]@{
         scan_meta = $scan_meta
         update_meta = $update_meta
-        pswindowsupdate_version = 'tbd'
     }
 
     $fact_name = [pscustomobject]@{
