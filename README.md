@@ -119,7 +119,7 @@ This module leverages an external copy of the PSWindowsUpdate module (written by
 
 ## How it works
 
-This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `wsusscn_url`. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of mising updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
+This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `wsusscn_url`. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of missing and installed updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
 
 ## Limitations
 
@@ -139,7 +139,7 @@ Downloads only occur during the Windows Schedule task execution (i.e. trigger ti
 ## Design Considerations
 
 Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?  
-A: The module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagement had been installed along with Nuget, 2) what version of PSWindowsUpdate was already installed, if any and 3) installing PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
+A: The updatereporting_win module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagement had been installed along with Nuget, 2) determine what version of PSWindowsUpdate was already installed, if any and 3) install PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
 
 Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.  
 A: Although the PSWindowsUpdate module is publicly available, Michal Gajda holds the CopyRight.
