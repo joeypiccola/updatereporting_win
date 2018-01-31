@@ -149,4 +149,4 @@ A: PSWindowsUpdate performs a much faster scan when using an offline scan file. 
 
 ## Known Issues
 
-1. Because this module is setting up a windows scheduled task, if you ever wish to stop using this module you will first need to define the updatereporting_win class' `$task_ensure` param to `absent`.s
+1. Because this module is setting up a windows scheduled task, if you ever wish to stop using this module you will first need to define the updatereporting_win class' `$task_ensure` param to `absent`, allow puppet to run, then remove the class.
