@@ -111,7 +111,7 @@ This module leverages it's own copy of the PSWindowsUpdate module. The PSWindows
 
 ## How it works
 
-This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `pswindowsupdate_url`. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
+This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `wsusscn_url`. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of mising updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
 
 ## Limitations
 
@@ -122,7 +122,7 @@ Import-Module : The version of the loaded Windows PowerShell is '3.0'. The modul
 ```
 
 2. Time of day scheduling is currently limited to a random time between 12:00AM and 5:59AM.
-3. The PowerShell script used to determine the remote wsusscn2.cab file's last modified date has been tested on IIS and Artifactory. Not all web servers will provide a last modified date when queried. 
+3. The PowerShell script used to determine the remote wsusscn2.cab file's last modified date has been tested on IIS and Artifactory. Not all web servers will provide a last modified date when queried.
 
 ## Download Behavior
 
