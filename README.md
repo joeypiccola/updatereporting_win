@@ -1,7 +1,7 @@
 
 # updatereporting_win
 
-Puppet module to report on missing updates on a Windows machine.
+Puppet module to report on missing and installed updates on a Windows machine.
 
 ## Parameters
 
@@ -18,7 +18,7 @@ Puppet module to report on missing updates on a Windows machine.
 
 ## Usage
 
-At a minimum supply the download locations for the PSWindowsUpdate zip and the wsusscn2.cab file. It is recommended not to schedule the task too often because the update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~200MB wsusscn2.cab file). As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
+At a minimum supply the download locations for the PSWindowsUpdate zip and the wsusscn2.cab file. It is recommended not to schedule the task too often because the missing update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~200MB wsusscn2.cab file). As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
 
 ## Examples
 
@@ -63,17 +63,19 @@ class { 'updatereporting_win':
 
 ## The Report
 
-The update report is consumed as an external fact named `updatereporting_win`. An example of this fact is below. The report includes the last scan time  as well as the last modified time of the local wsusscn2.cab.
+The update report is consumed as an external fact named `updatereporting_win`. An example of this fact is below. The report includes the last scan time as well as the last modified time of the local wsusscn2.cab.
 
 ```json
 {
   "updatereporting_win": {
     "scan_meta": {
       "last_run_time": "01-19-2018 02:19:17 AM",
-      "wsusscn2_file_time": "01-10-2018 03:26:54 PM"
+      "pswindowsupdate_version" : "2.0.0.3",
+      "wsusscn2_file_lastwritetime": "01-10-2018 03:26:54 PM"
     },
     "update_meta": {
       "missing_update_count": 2,
+      "installed_update_count" : 4,
       "missing_update": [
         {
           "KB": "KB3000483",
@@ -93,6 +95,12 @@ The update report is consumed as an external fact named `updatereporting_win`. A
       "missing_update_kbs": [
         "KB3000483",
         "KB4048961"
+      ],
+      "installed_update_kbs" : [
+        "KB3134758",
+        "KB2843630",
+        "KB3042058",
+        "KB3081320",
       ]
     }
   }
@@ -107,7 +115,7 @@ This module leverages a current copy of the Windows Update offline scan file. Th
 
 ### PSWindowsUpdate
 
-This module leverages it's own copy of the PSWindowsUpdate module. The PSWindowsUpdate copy must be zip'd up and placed on a web server so that it can be downloaded. Even if the system that the puppet-agent is running on already has a copy of the PSWindowsUpdate module retrieved \ installed via some other method (e.g. Nuget \ PackageManagement) and is placed in a valid `$env:PSModulePath` it will not be used. This nature of this decoupling between the system and it's own inventory of PowerShell modules is discussed under Design Considerations.
+This module leverages an external copy of the PSWindowsUpdate module (written by Michal Gajda). Currently tested with version `2.0.0.3` The PSWindowsUpdate module must be zip'd up and placed on a web server so that it can be downloaded. Even if the system that the puppet-agent is running on already has a copy of the PSWindowsUpdate module retrieved \ installed via some other method (e.g. Nuget \ PackageManagement) and is placed in a valid `$env:PSModulePath` it will not be used. This nature of this decoupling between the system and it's own inventory of PowerShell modules is discussed under Design Considerations. A current copy of the Michal Gajda's PSWindowsUpdate module can be downloaded via `Save-Module -Name PSWindowsUpdate -Path <path>`. For more information see the PowerShell Gallery https://www.powershellgallery.com/packages/PSWindowsUpdate/.
 
 ## How it works
 
@@ -115,7 +123,7 @@ This module works by first using Puppet to stage a PowerShell script to the loca
 
 ## Limitations
 
-1. The biggest limitation is that if you're using this module on a system that is running PowerShell Version 3.0 then you will need to modify the PSWindowsUpdate module manifest file's `PowerShellVersion` from `PowerShellVersion = '3.0.0.0'` to `PowerShellVersion = '3.0'`. If you do not do this then you'll get the following error on the PSWindowsUpdate module import.
+1. If you're using this module on a system that is running PowerShell Version 3.0 then you will need to modify the PSWindowsUpdate module manifest file's `PowerShellVersion` from `PowerShellVersion = '3.0.0.0'` to `PowerShellVersion = '3.0'`. If you do not do this then you'll get the following error on the PSWindowsUpdate module import.
 
 ```plaintext
 Import-Module : The version of the loaded Windows PowerShell is '3.0'. The module 'C:\Windows\Temp\PSWindowsUpdate\2.0.0.3\PSWindowsUpdate.psd1' requires a minimum Windows PowerShell version of '3.0.0.0' to run. Please verify the installation of the Windows PowerShell and try again.
@@ -130,4 +138,12 @@ Downloads only occur during the Windows Schedule task execution (i.e. trigger ti
 
 ## Design Considerations
 
+Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?
+A: The module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagment had been installed along with Nuget, 2) what version of PSWindowsUpdate was already installed, if any and 3) installing PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
+
+Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.
+A: Although the PSWindowsUdpate module is publicly available, Michal Gajda holds the CopyRight.
+
 ## Known Issues
+
+1. Because this module is setting up a windows scheduled task, if you ever wish to stop using this module you will first need to define the updatereporting_win class' `$task_ensure` param to `absent`.s
