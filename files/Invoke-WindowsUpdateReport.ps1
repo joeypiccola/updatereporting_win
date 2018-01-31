@@ -116,12 +116,17 @@ try {
     $updates = $missingUpdates | select kb, title, size, msrcseverity, @{Name="LastDeploymentChangeTime";Expression={$_.lastdeploymentchangetime.tostring("MM-dd-yyyy hh:mm:ss tt")}}
     $kbarray = @()
     $updates | %{$kbarray += $_.kb} | ConvertTo-Csv
+    # get installed updates
+    $installedkbarray = @()
+    $installedUpdates = Get-HotFix | %{$installedkbarray += $_.hotfixid} | ConvertTo-Csv
     $windowsupdatereporting_col = @()
 
     $update_meta = [pscustomobject]@{
         missing_update_count = $updates.Count
         missing_update = $updates
         missing_update_kbs = $kbarray
+        installed_update_count = $installedUpdates.count
+        Installed_update_kb = $installedkbarray
     }
 
     $scan_meta = [pscustomobject]@{
