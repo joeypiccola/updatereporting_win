@@ -24,17 +24,6 @@ $PSWindowsUpdateZipFilePath = Join-Path -Path $DownloadDirectory -ChildPath $PSW
 $WSUSscnCabFile =  $WSUSscnURL.ToString().Split('/')[$WSUSscnURL.ToString().split('/').count-1]
 $WSUSscnCabFilePath = Join-Path -Path $DownloadDirectory -ChildPath $WSUSscnCabFile
 
-Write-Verbose -Message $PSWindowsUpdateURL
-Write-Verbose -Message $PSWindowsUpdateForceDownload
-Write-Verbose -Message $WSUSscnURL
-Write-Verbose -Message $WSUSscnForceDownload
-Write-Verbose -Message $DownloadDirectory
-Write-Verbose -Message $PSWindowsUpdateDir
-Write-Verbose -Message $PSWindowsUpdateZipFile
-Write-Verbose -Message $PSWindowsUpdateZipFilePath
-Write-Verbose -Message $WSUSscnCabFile
-Write-Verbose -Message $WSUSscnCabFilePath
-
 #region helperFunctions
 
 function Expand-ZIPFile($File, $Destination) {
