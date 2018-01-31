@@ -38,6 +38,9 @@ Write-Verbose -Message $WSUSscnCabFilePath
 #region helperFunctions
 
 function Expand-ZIPFile($File, $Destination) {
+    if (!(Test-Path -Path $Destination)) {
+        New-Item -ItemType Directory -Force -Path $Destination
+    }
     $shell = new-object -com shell.application
     $zip = $shell.NameSpace($file)
     foreach($item in $zip.items()) {
@@ -74,7 +77,7 @@ try {
         # download the pswindowsupdate module, automatically overwrite the zip if already present
         Start-BitsTransfer -Source $PSWindowsUpdateURL -Destination $DownloadDirectory -ErrorAction Stop
         # unzip the module
-        Expand-ZIPFile -File $PSWindowsUpdateZipFilePath -Destination $DownloadDirectory
+        Expand-ZIPFile -File $PSWindowsUpdateZipFilePath -Destination $PSWindowsUpdateDir
         # remove the module zip file
         Remove-Item -Path $PSWindowsUpdateZipFilePath -Force -ErrorAction Stop
     }
@@ -99,7 +102,6 @@ try {
 
     # import the pswindowesupdate module
     Import-Module (Get-ChildItem -Filter "*.psd1" -Path $PSWindowsUpdateDir -Recurse).FullName -ErrorAction Stop
-    #Import-Module (Get-Item -Filter "*.psd1" -Path $PSWindowsUpdateDir).FullName -ErrorAction Stop
     # get any previous Offline Service Managers and remove them manually
     $offlineServiceManagers = Get-WUServiceManager | ?{$_.name -eq 'Offline Sync Service'}
     if ($offlineServiceManagers) {
