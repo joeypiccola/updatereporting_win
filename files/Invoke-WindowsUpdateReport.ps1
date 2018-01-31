@@ -126,7 +126,7 @@ try {
         missing_update = $updates
         missing_update_kbs = $kbarray
         installed_update_count = $installedUpdates.count
-        Installed_update_kb = $installedkbarray
+        installed_update_kb = $installedkbarray
     }
 
     $scan_meta = [pscustomobject]@{
