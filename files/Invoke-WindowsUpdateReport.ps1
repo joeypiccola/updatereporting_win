@@ -115,24 +115,26 @@ try {
     # parse the results and stage an external fact
     $updates = $missingUpdates | select kb, title, size, msrcseverity, @{Name="LastDeploymentChangeTime";Expression={$_.lastdeploymentchangetime.tostring("MM-dd-yyyy hh:mm:ss tt")}}
     $kbarray = @()
-    $updates | %{$kbarray += $_.kb} | ConvertTo-Csv
+    $updates | %{$kbarray += $_.kb}
     # get installed updates
     $installedkbarray = @()
-    $installedUpdates = Get-HotFix | %{$installedkbarray += $_.hotfixid} | ConvertTo-Csv
+    $getinstalledUpdates = Get-HotFix
+    $installedUpdates = $getinstalledUpdates | %{$installedkbarray += $_.hotfixid}
     $windowsupdatereporting_col = @()
 
     $update_meta = [pscustomobject]@{
         missing_update_count = $updates.Count
         missing_update = $updates
         missing_update_kbs = $kbarray
-        installed_update_count = $installedUpdates.count
+        installed_update_count = $getinstalledUpdates.count
         installed_update_kb = $installedkbarray
     }
 
     $scan_meta = [pscustomobject]@{
         last_run_time = (Get-Date -Format "MM-dd-yyyy hh:mm:ss tt")
-        wsusscn2_file_time = (Get-Item -Path $WSUSscnCabFilePath).lastwritetime.ToString("MM-dd-yyyy hh:mm:ss tt")
-        pswindowsupdate_version = 'tbd'
+        wsusscn2_file_lastwritetime = (Get-Item -Path $WSUSscnCabFilePath).lastwritetime.ToString("MM-dd-yyyy hh:mm:ss tt")
+        # getting the version this way might conflict with a version loaded in a $env:PSModulePath
+        pswindowsupdate_version = (Get-Module pswindowsupdate).Version.ToString()
     }
 
     $meta = [pscustomobject]@{
