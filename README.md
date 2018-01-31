@@ -138,11 +138,14 @@ Downloads only occur during the Windows Schedule task execution (i.e. trigger ti
 
 ## Design Considerations
 
-Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?
-A: The module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagment had been installed along with Nuget, 2) what version of PSWindowsUpdate was already installed, if any and 3) installing PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
+Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?  
+A: The module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagement had been installed along with Nuget, 2) what version of PSWindowsUpdate was already installed, if any and 3) installing PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
 
-Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.
-A: Although the PSWindowsUdpate module is publicly available, Michal Gajda holds the CopyRight.
+Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.  
+A: Although the PSWindowsUpdate module is publicly available, Michal Gajda holds the CopyRight.
+
+Q: Why use the wsusscn2.cab file?  
+A: PSWindowsUpdate performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
 
 ## Known Issues
 
