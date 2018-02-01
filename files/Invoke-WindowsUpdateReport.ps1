@@ -180,7 +180,7 @@ try {
     # get installed updates
     $installedkbarray = @()
     $getinstalledUpdates = Get-HotFix
-    $installedUpdates = $getinstalledUpdates | %{$installedkbarray += $_.hotfixid}
+    $getinstalledUpdates | %{$installedkbarray += $_.hotfixid}
 
     # build an object with all the update info
     $windowsupdatereporting_col = @()   
