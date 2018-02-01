@@ -43,8 +43,10 @@ c:/windows/temp/puppet/updatereporting_win. Stage a puppet fact.
 .EXAMPLE
 .\Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl http://internal.corp:8081/pswindowsupdate.zip -wsusscnurl http://internal.corp:8081/wsusscn2.cab -downloaddirectory c:/windows/temp/puppet/updatereporting_win -DoNotGeneratePuppetFact
 
-Generate a Windows update report. Download the prerequisites to c:/windows/temp/puppet/updatereporting_win. Output update report object only and DO NOT stage a 
-puppet fact. Work with the report results via '-OutVariable report'. ($report | Select-Object -ExpandProperty updatereporting_win).update_meta.missing_update
+Generate a Windows update report. Download the prerequisites to 
+c:/windows/temp/puppet/updatereporting_win. Output update report object only and DO NOT stage a 
+puppet fact. Work with the report results via '-OutVariable report'. 
+($report | Select-Object -ExpandProperty updatereporting_win).update_meta.missing_update
 
 .INPUTS
 None. You cannot pipe objects to .\Invoke-WindowsUpdateReport.ps1
