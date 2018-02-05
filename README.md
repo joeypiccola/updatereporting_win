@@ -1,23 +1,24 @@
-<!-- TOC -->
+# updatereporting_win
 
-- [updatereporting_win](#updatereporting_win)
-    - [Parameters](#parameters)
-    - [Usage](#usage)
-        - [Examples](#examples)
-        - [The Report](#the-report)
-    - [External Dependencies](#external-dependencies)
-        - [wsusscn2.cab](#wsusscn2cab)
-        - [PSWindowsUpdate](#pswindowsupdate)
-    - [How it works](#how-it-works)
-        - [Download Behavior](#download-behavior)
-    - [Compatability](#compatability)
-        - [Limitations](#limitations)
-        - [Known Issues](#known-issues)
-    - [Design Considerations](#design-considerations)
+<!-- TOC -->
+- [Description](#description)
+- [Parameters](#parameters)
+- [Usage](#usage)
+    - [Examples](#examples)
+    - [The Report](#the-report)
+- [External Dependencies](#external-dependencies)
+    - [wsusscn2.cab](#wsusscn2cab)
+    - [PSWindowsUpdate](#pswindowsupdate)
+- [How it works](#how-it-works)
+    - [Download Behavior](#download-behavior)
+- [Compatability](#compatability)
+    - [Limitations](#limitations)
+    - [Known Issues](#known-issues)
+- [Design Considerations](#design-considerations)
 
 <!-- /TOC -->
 
-# updatereporting_win
+## Description
 
 Puppet module to report on missing and installed updates on a Windows machine.
 
@@ -167,7 +168,7 @@ Import-Module : The version of the loaded Windows PowerShell is '3.0'. The modul
 
 ## Design Considerations
 
-Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?
+Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?  
 A: The updatereporting_win module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagement had been installed along with Nuget, 2) determine what version of PSWindowsUpdate was already installed, if any and 3) install PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
 
 Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.  
