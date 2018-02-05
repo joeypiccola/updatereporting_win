@@ -136,9 +136,16 @@ Import-Module : The version of the loaded Windows PowerShell is '3.0'. The modul
 
 Downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
 
+## Compatability
+
+updatereporting_win has been tested on the following versions of Windows and PowerShell.
+
+1. Server 2008 R2 (PowerShell v3.0, 4.0, 5.0)
+2. Server 2012 R2 (PowerShell v4.0, v5.0)
+
 ## Design Considerations
 
-Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?  
+Q: Why not leverage a system's local copy of the PSWindowsUpdate module located in a `$env:PSModulePath`?
 A: The updatereporting_win module was designed to be backwards compatible with older version of PowerShell. It was too difficult to 1) detect if PackageManagement had been installed along with Nuget, 2) determine what version of PSWindowsUpdate was already installed, if any and 3) install PSWindowsUpdate via the Internet which may not be accessible or other internal Nuget Feed. Supplying a supplemental copy of the PSWindowsUpdate module via a URL is the easiest and cleanest approach to ensure updatereporting_win has what it needs.
 
 Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.  
