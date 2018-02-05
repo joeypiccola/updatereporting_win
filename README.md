@@ -82,7 +82,7 @@ class { 'updatereporting_win':
 
 ### The Report
 
-The update report is consumed as an external fact named `updatereporting_win`. An example of this fact is below. The report includes the last scan time as well as the last modified time of the local wsusscn2.cab.
+The update report is consumed as an external fact named `updatereporting_win`. An abbreviated example of this fact is below. The report includes the last scan time as well as the last modified time of the local wsusscn2.cab. The `wsusscn2_file_lastwritetime` can be used to determine whether or not the system is using a relevant \ latest copy of the wsusscn2.cab file (released monthly). 
 
 ```json
 {
