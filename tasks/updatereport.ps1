@@ -4,13 +4,13 @@ Param (
     [System.Uri]$PSWindowsUpdateURL
     ,
     [Parameter()]
-    [Switch]$PSWindowsUpdateForceDownload
+    [string]$PSWindowsUpdateForceDownload
     ,
     [Parameter(Mandatory)]
     [System.Uri]$WSUSscnURL
     ,
     [Parameter()]
-    [Switch]$WSUSscnForceDownload
+    [string]$WSUSscnForceDownload
     ,
     [Parameter()]
     [ValidateScript({Test-Path -Path $_ -IsValid})]
@@ -22,9 +22,9 @@ Param (
 
 $invokeParams = @{
     PSWindowsUpdateURL = $PSWindowsUpdateURL
-    PSWindowsUpdateForceDownload = $PSWindowsUpdateForceDownload
+    PSWindowsUpdateForceDownload = if ($PSWindowsUpdateForceDownload -eq 'true') {$true} else {$false}
     WSUSscnURL = $WSUSscnURL
-    WSUSscnForceDownload = $WSUSscnForceDownload
+    WSUSscnForceDownload = if ($WSUSscnForceDownload -eq 'true') {$true} else {$false}
     DownloadDirectory = $DownloadDirectory
 }
 
