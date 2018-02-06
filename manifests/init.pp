@@ -73,22 +73,16 @@ class updatereporting_win (
     }
   }
 
-  file { 'updatereporting_win_stage_file':
-    ensure => 'present',
-    source => 'puppet:///modules/updatereporting_win/Invoke-WindowsUpdateReport.ps1',
-    path   => 'c:/windows/temp/Invoke-WindowsUpdateReport.ps1',
-    before => Scheduled_task['updatereporting_win'],
-  }
-
   $min = fqdn_rand(59)
   $hour = fqdn_rand(3)+1
+  $cachedir = $facts['puppet_vardir']
 
   scheduled_task { 'updatereporting_win':
     ensure    => $task_ensure,
     name      => 'Windows Update Reporting (Puppet Managed Scheduled Task)',
     enabled   => $task_enabled,
     command   => 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
-    arguments => "-WindowStyle Hidden -ExecutionPolicy Bypass \"C:\\windows\\temp\\Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl ${pswindowsupdate_url} -wsusscnurl ${wsusscn_url} -pswindowsupdateforcedownload:${pswindowsupdate_force_download_set} -wsusscnforcedownload:${wsusscn_force_download_set} -downloaddirectory ${download_directory}\"",
+    arguments => "-WindowStyle Hidden -ExecutionPolicy Bypass \"${cachedir}/Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl ${pswindowsupdate_url} -wsusscnurl ${wsusscn_url} -pswindowsupdateforcedownload:${pswindowsupdate_force_download_set} -wsusscnforcedownload:${wsusscn_force_download_set} -downloaddirectory ${download_directory}\"",
     provider  => 'taskscheduler_api2',
     trigger   => {
       schedule    => $task_schedule,
