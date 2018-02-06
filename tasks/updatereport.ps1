@@ -4,13 +4,13 @@ Param (
     [System.Uri]$PSWindowsUpdateURL
     ,
     [Parameter()]
-    [string]$PSWindowsUpdateForceDownload
+    [string]$PSWindowsUpdateForceDownload = 'falase'
     ,
     [Parameter(Mandatory)]
     [System.Uri]$WSUSscnURL
     ,
     [Parameter()]
-    [string]$WSUSscnForceDownload
+    [string]$WSUSscnForceDownload = 'falase'
     ,
     [Parameter()]
     [ValidateScript({Test-Path -Path $_ -IsValid})]

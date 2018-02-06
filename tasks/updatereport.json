@@ -13,15 +13,15 @@
         },
         "wsusscnforcedownload": {
             "description": "Specify this parameter if you want to force the redownload of the WSUSscnURL.cab. This will overwrite the existing copy (if any).",
-            "type": "Enum[true, false]"
+            "type": "Optional[Boolean]"
         },
         "pswindowsupdateforcedownload": {
             "description": "Specify this parameter if you want to force the redownload of the PSWindowsUpdate module zip. This will overwrite the existing copy (if any).",
-            "type": "Enum[true, false]"
+            "type": "Optional[Boolean]"
         },
         "downloaddirectory": {
             "description": "Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files.",
-            "type": "Optional['C:/Windows/Temp']"
+            "type": "Optional[String]"
         }
     }
 }
