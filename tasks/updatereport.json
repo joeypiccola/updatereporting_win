@@ -3,23 +3,23 @@
     "description": "A task to generate a report of installed and missing Windows updates.",
     "input_method": "powershell",
     "parameters": {
-        "PSWindowsUpdateURL": {
+        "pswindowsupdateurl": {
             "description": "A http url of the PSWindowsUpdate module zip file.",
             "type": "String"
         },
-        "WSUSscnURL": {
+        "wsusscnurl": {
             "description": "A http url of the WSUSscn2.cab file.",
             "type": "String"
         },
-        "WSUSscnForceDownload": {
+        "wsusscnforcedownload": {
             "description": "Specify this parameter if you want to force the redownload of the WSUSscnURL.cab. This will overwrite the existing copy (if any).",
             "type": "Enum['true', 'false']"
         },
-        "PSWindowsUpdateForceDownload": {
+        "pswindowsupdateforcedownload": {
             "description": "Specify this parameter if you want to force the redownload of the PSWindowsUpdate module zip. This will overwrite the existing copy (if any).",
             "type": "Enum['true', 'false']"
         },
-        "DownloadDirectory": {
+        "downloaddirectory": {
             "description": "Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files.",
             "type": "Optional['C:/Windows/Temp']"
         }
