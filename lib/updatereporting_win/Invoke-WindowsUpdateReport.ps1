@@ -23,11 +23,11 @@ A http url of the WSUSscnURL.cab file.
 Example: 'http://internal.corp:8081/wsusscnurl.cab'
 
 .PARAMETER WSUSscnForceDownload
-Specify this parameter if you want to force the redownload of the WSUSscnURL.cab. This will
+Specify this parameter if you want to force the redownload of the WSUSscn2.cab. This will
 overwrite the existing copy (if any).
 
 .PARAMETER DownloadDirectory
-Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files. Defaults to 
+Location of where to download the PSWindowsUpdate.zip and WSUSscn2.cab files. Defaults to 
 C:\Windows\Temp.
 
 .PARAMETER DoNotGeneratePuppetFact
