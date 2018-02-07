@@ -16,6 +16,7 @@ Param (
     [ValidateScript({Test-Path -Path $_ -IsValid})]
     [String]$DownloadDirectory = 'C:\Windows\Temp'
     ,
+    # not used for tasks
     [Parameter()]
     [Switch]$DoNotGeneratePuppetFact
 )
