@@ -82,7 +82,7 @@ class { 'updatereporting_win':
 
 ### The Report
 
-The update report is consumed as an external fact named `updatereporting_win`. An abbreviated example of this fact is below. The report includes the last scan time as well as the last modified time of the local wsusscn2.cab. The `wsusscn2_file_lastwritetime` can be used to determine whether or not the system is using a relevant \ latest copy of the wsusscn2.cab file (released monthly). 
+The update report is consumed as an external fact named `updatereporting_win`. An abbreviated example of this fact is below. The report includes the last scan time as well as the last modified time of the local wsusscn2.cab. The `wsusscn2_file_lastwritetime` can be used to determine whether or not the system is using a recent copy of the wsusscn2.cab file (released monthly).
 
 ```json
 {
@@ -134,22 +134,28 @@ This module leverages a current copy of the Windows Update offline scan file. Th
 
 ### PSWindowsUpdate
 
-This module leverages an external copy of the PSWindowsUpdate module (written by Michal Gajda). Currently tested with version `2.0.0.3` The PSWindowsUpdate module must be zip'd up and placed on a web server so that it can be downloaded. Even if the system that the puppet-agent is running on already has a copy of the PSWindowsUpdate module retrieved \ installed via some other method (e.g. Nuget \ PackageManagement) and is placed in a valid `$env:PSModulePath` it will not be used. This nature of this decoupling between the system and it's own inventory of PowerShell modules is discussed under Design Considerations. A current copy of the Michal Gajda's PSWindowsUpdate module can be downloaded via `Save-Module -Name PSWindowsUpdate -Path <path>`. For more information see the PowerShell Gallery https://www.powershellgallery.com/packages/PSWindowsUpdate/.
+This module leverages an external copy of the PSWindowsUpdate module (written by Michal Gajda). Currently tested with version `2.0.0.3`. The PSWindowsUpdate module must be zip'd up and placed on a web server so that it can be downloaded, folder name and directory structure are irrelevant so long as there is a valid `.psd1` and `psm1`.
+
+Even if the system that the puppet-agent is running on already has a copy of the PSWindowsUpdate module retrieved \ installed via some other method (e.g. Nuget \ PackageManagement) and is placed in a valid `$env:PSModulePath` it will not be used. This nature of this decoupling between the system and it's own inventory of PowerShell modules is discussed under Design Considerations. A current copy of Michal Gajda's PSWindowsUpdate module can be downloaded via `Save-Module -Name PSWindowsUpdate -Path <path>`. For more information see the PowerShell Gallery https://www.powershellgallery.com/packages/PSWindowsUpdate/.
 
 ## How it works
 
-This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers a scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `wsusscn_url`. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of missing and installed updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
+This module works by first using Puppet to stage a PowerShell script to the local system in `C:\Windows\Temp`. Next, Puppet registers a scheduled task to run the previously staged PowerShell script. When the schedule task is triggered the PowerShell script attempts to download a copy of the PSWindowsUpdate zip file if it does not already exist (relative to the default or specified `download_directory`). The PowerShell script also attempts to download a copy of the specified wsusscn2.cab file if 1) it does not already exist or 2) the existing local wsusscn2.cab has a different last modified date than the one specified via the `wsusscn_url`**. Once the download requirements have been met, the PowerShell script attempts to load the module, import the wsusscn2.cab file and proceed with generating a report of missing and installed updates. This is accomplished by placing a .json file in `C:\ProgramData\PuppetLabs\facter\facts.d\` named `updatereporting.json`.
+
+** see limitations #3
 
 ### Download Behavior
 
 Downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
 
-## Compatability
+## Compatibility
 
 updatereporting_win has been tested on the following versions of Windows and PowerShell.
 
-1. Server 2008 R2 (PowerShell v3.0, 4.0, 5.0)
+1. Server 2008 R2 (PowerShell v3.0**, 4.0, 5.0)
 2. Server 2012 R2 (PowerShell v4.0, v5.0)
+
+** see limitation #1
 
 ### Limitations
 
@@ -174,5 +180,5 @@ A: The updatereporting_win module was designed to be backwards compatible with o
 Q: Why not bundle the PSWindowsUpdate module in the updatereporting_win module.  
 A: Although the PSWindowsUpdate module is publicly available, Michal Gajda holds the CopyRight.
 
-Q: Why use the wsusscn2.cab file?
+Q: Why use the wsusscn2.cab file?  
 A: PSWindowsUpdate performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
