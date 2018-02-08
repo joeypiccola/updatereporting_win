@@ -112,7 +112,7 @@ The update report is consumed as an external fact named `updatereporting_win`. A
         "KB3134758",
         "KB2843630",
         "KB3042058",
-        "KB3081320",
+        "KB3081320"
       ]
     }
   }
@@ -124,6 +124,9 @@ The update report is consumed as an external fact named `updatereporting_win`. A
 ### wsusscn2.cab
 
 This module leverages a current copy of the Windows Update offline scan file. This file can be downloaded via http://go.microsoft.com/fwlink/?LinkID=74689. It is suggested to download this ~200MB file and host it internally vs. devising a way to pull it form the Internet for each puppet node.
+
+
+**Note**: The parameter `wsusscn_url` is not intended to be used with the http://go.microsoft.com/fwlink/?LinkID=74689 URL. The underlying script expects a URL with a `.cab` file.
 
 ## How it works
 
