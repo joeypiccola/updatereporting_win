@@ -11,6 +11,8 @@
     - [PSWindowsUpdate](#pswindowsupdate)
 - [How it works](#how-it-works)
     - [Download Behavior](#download-behavior)
+- [Tasks](#tasks)
+    - [updatereport](#updatereport)
 - [Compatability](#compatability)
     - [Limitations](#limitations)
     - [Known Issues](#known-issues)
@@ -138,7 +140,7 @@ The module's class and task work by executing a PowerShell script located in the
 
 wsusscn2.cab file downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
 
-## Task
+## Tasks
 
 ### updatereport
 
