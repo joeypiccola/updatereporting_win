@@ -8,6 +8,9 @@ Initial release.
 ## Release 0.1.1
 Doc updates.
 
+## Release 0.1.2
+Convert CR LF to LF, see PCP-825 for details, updatereport.ps1.
+
 **Features**
 
 **Bugfixes**
