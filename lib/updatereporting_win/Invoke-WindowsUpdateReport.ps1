@@ -1,33 +1,23 @@
 ﻿<#
 .SYNOPSIS
-Script for gathering installed and missing updates via an external copy of the PSWindowsUpdate
-module. This script relies on an external copy of the latest Microsoft Windows Update (WU) 
-offline scan file (WSUSscn2.cab).
+Script for gathering installed and missing updates. This script relies on an external copy of the
+latest Microsoft Windows Update (WU) offline scan file (WSUSscn2.cab).
 
 .DESCRIPTION
 Use this script to generate a report of both missing and installed updates on a windows machine.
-The script is a wrapper for PSWindowsUpdate so that it handles all prerequisites to be used offline.
 This script was originally intendd to be used with puppet but has been adapted to be used as a 
 standalone. 
-
-.PARAMETER PSWindowsUpdateURL
-A http url of the PSWindowsUpdate module zip file.
-Example: 'http://internal.corp:8081/PSWindowsUpdate.zip'
-
-.PARAMETER PSWindowsUpdateForceDownload
-Specify this parameter if you want to force the redownload of the PSWindowsUpdate module zip. This
-will overwrite the existing copy (if any).
 
 .PARAMETER WSUSscnURL
 A http url of the WSUSscnURL.cab file.
 Example: 'http://internal.corp:8081/wsusscnurl.cab'
 
 .PARAMETER WSUSscnForceDownload
-Specify this parameter if you want to force the redownload of the WSUSscn2.cab. This will
+Specify this parameter if you want to force the redownload of the WSUSscnURL.cab. This will
 overwrite the existing copy (if any).
 
 .PARAMETER DownloadDirectory
-Location of where to download the PSWindowsUpdate.zip and WSUSscn2.cab files. Defaults to 
+Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files. Defaults to 
 C:\Windows\Temp.
 
 .PARAMETER DoNotGeneratePuppetFact
@@ -35,13 +25,13 @@ Specify this parameter if you want to use this script independent of puppet. In 
 simply output an object of missing and installed updates.
 
 .EXAMPLE
-.\Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl http://internal.corp:8081/pswindowsupdate.zip -wsusscnurl http://internal.corp:8081/wsusscn2.cab -downloaddirectory c:/windows/temp/puppet/updatereporting_win
+.\Invoke-WindowsUpdateReport.ps1 -wsusscnurl http://internal.corp:8081/wsusscn2.cab -downloaddirectory c:/windows/temp/puppet/updatereporting_win
 
 Generate a Windows update report. Download the prerequisites to 
 c:/windows/temp/puppet/updatereporting_win. Stage a puppet fact.
 
 .EXAMPLE
-.\Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl http://internal.corp:8081/pswindowsupdate.zip -wsusscnurl http://internal.corp:8081/wsusscn2.cab -downloaddirectory c:/windows/temp/puppet/updatereporting_win -DoNotGeneratePuppetFact
+.\Invoke-WindowsUpdateReport.ps1 -wsusscnurl http://internal.corp:8081/wsusscn2.cab -downloaddirectory c:/windows/temp/puppet/updatereporting_win -DoNotGeneratePuppetFact
 
 Generate a Windows update report. Download the prerequisites to 
 c:/windows/temp/puppet/updatereporting_win. Output update report object only and DO NOT stage a 
@@ -55,7 +45,7 @@ None. You cannot pipe objects to .\Invoke-WindowsUpdateReport.ps1
 PSWindowsUpdate.WindowsUpdate Only if ran with the DoNotGeneratePuppetFacts parameter. 
 
 .NOTES
-Version:        1.0
+Version:        2.0
 Author:         Joey Piccola
 Creation Date:  01.31.18
 Purpose/Change: Used by the puppet module updatereporting_win
@@ -63,12 +53,6 @@ Purpose/Change: Used by the puppet module updatereporting_win
 
 [CmdletBinding()]
 Param (
-    [Parameter(Mandatory)]
-    [System.Uri]$PSWindowsUpdateURL
-    ,
-    [Parameter()]
-    [Switch]$PSWindowsUpdateForceDownload
-    ,
     [Parameter(Mandatory)]
     [System.Uri]$WSUSscnURL
     ,
@@ -84,24 +68,10 @@ Param (
 )
 
 $DownloadDirectory = $DownloadDirectory.Replace('/','\')
-$PSWindowsUpdateDir = Join-Path -Path $DownloadDirectory -ChildPath 'PSWindowsUpdate'
-$PSWindowsUpdateZipFile = $PSWindowsUpdateURL.ToString().Split('/')[$PSWindowsUpdateURL.ToString().split('/').count-1]
-$PSWindowsUpdateZipFilePath = Join-Path -Path $DownloadDirectory -ChildPath $PSWindowsUpdateZipFile
 $WSUSscnCabFile =  $WSUSscnURL.ToString().Split('/')[$WSUSscnURL.ToString().split('/').count-1]
 $WSUSscnCabFilePath = Join-Path -Path $DownloadDirectory -ChildPath $WSUSscnCabFile
 
 #region helperFunctions
-function Expand-ZIPFile($File, $Destination) {
-    if (!(Test-Path -Path $Destination)) {
-        New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-    }
-    $shell = new-object -com shell.application
-    $zip = $shell.NameSpace($file)
-    foreach($item in $zip.items()) {
-        $shell.Namespace($Destination).copyhere($item)
-    }
-}
-
 function Get-WebFileLastModified($url) {
     $webRequest = [System.Net.HttpWebRequest]::Create($url);
     $webRequest.Method = "HEAD";
@@ -121,20 +91,6 @@ try {
     # import the BitsTransfer module
     Import-Module -Name BitsTransfer -ErrorAction Stop
 
-    # download the pswindowsupdate module
-    if (!(Test-Path -Path $PSWindowsUpdateDir) -or ($PSWindowsUpdateForceDownload -eq $true)) {
-        # remove pswindowsupdate dir if it exists
-        if (Test-Path -Path $PSWindowsUpdateDir) {
-            Remove-Item -Path $PSWindowsUpdateDir -Recurse -Force -ErrorAction Stop
-        }
-        # download the pswindowsupdate module, automatically overwrite the zip if already present
-        Start-BitsTransfer -Source $PSWindowsUpdateURL -Destination $DownloadDirectory -ErrorAction Stop
-        # unzip the module
-        Expand-ZIPFile -File $PSWindowsUpdateZipFilePath -Destination $PSWindowsUpdateDir
-        # remove the module zip file
-        Remove-Item -Path $PSWindowsUpdateZipFilePath -Force -ErrorAction Stop
-    }
-
     # download the wsusscn2.cab file
     if (!(Test-Path -Path $WSUSscnCabFilePath) -or (($WSUSscnForceDownload -eq $true) -and (Test-Path -Path $WSUSscnCabFilePath))) {
         # remove the wsusscn2.cab if it exists
@@ -153,30 +109,41 @@ try {
         }
     }
 
-    # import the pswindowesupdate module
-    Import-Module (Get-ChildItem -Filter "*.psd1" -Path $PSWindowsUpdateDir -Recurse).FullName -ErrorAction Stop
-    # get any previous Offline Service Managers and remove them manually
-    $offlineServiceManagers = Get-WUServiceManager | ?{$_.name -eq 'Offline Sync Service'}
-    if ($offlineServiceManagers) {
-        foreach ($offlineServiceManager in $offlineServiceManagers) {
-            $objServiceManager = $null
-            $objServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
-            $objService = $objServiceManager.RemoveService($offlineServiceManager.ServiceID)
+    # Windows Update API Agent, https://msdn.microsoft.com/en-us/library/windows/desktop/aa387099(v=vs.85).aspx
+    # Adds or removes the registration of the update service with Windows Update Agent or Automatic Updates.
+    $updateServiceManager = New-Object -ComObject 'Microsoft.Update.ServiceManager'
+    # Registers a scan package as a service with Windows Update Agent (WUA) and then returns an IUpdateService interface.
+    $updateService = $updateServiceManager.AddScanPackageService("Offline Sync Service", $WSUSscnCabFilePath)
+    # Searches for updates on a server.
+    $updateSearcher = New-Object -ComObject Microsoft.Update.Searcher
+    # Gets and sets a ServerSelection value that indicates the server to search for updates.
+    $updateSearcher.ServerSelection = 3
+    # Gets and sets a site to search when the site to search is not a Windows Update site.
+    $updateSearcher.ServiceID = $updateService.ServiceID
+    # Performs a synchronous search for updates. The search uses the search options that are currently configured.
+    # "IsInstalled=1" finds updates that are installed on the destination computer.
+    # "IsHidden=0" finds updates that are not marked as hidden.
+    $searchResult = $updateSearcher.Search("IsInstalled=0 and IsHidden=0")
+    # A collection of updates that match the search criteria.
+    $missingUpdates = $searchResult.Updates
+    # Removes a service registration from WUA.
+    $objService = $updateServiceManager.RemoveService($updateService.ServiceID)
+
+    $updateCollection = @()
+    $missingUpdates | %{
+        $updateObject = $null
+        $updateObject = [pscustomobject]@{
+            KB = "KB" + $_.KBArticleIDs
+            LastDeploymentChangeTime = $_.LastDeploymentChangeTime.tostring("MM-dd-yyyy hh:mm:ss tt")
+            Size = "$([math]::round($_.maxdownloadsize / 1MB,0))MB"
+            MsrcSeverity = $_.MsrcSeverity
+            Title = $_.Title
         }
+        $updateCollection += $updateObject
     }
 
-    # add the previously downloaded wsusscn2.cab file as an Offline Sync Service Manager, this outputs an object. 
-    $offlineServiceManager = Add-WUServiceManager -ScanFileLocation $WSUSscnCabFilePath -Confirm:$false -ErrorAction Stop
-    # get the missing updates using the previously added Offline Service Manager
-    $missingUpdates = Get-WindowsUpdate -ServiceID $offlineServiceManager.ServiceID -ErrorAction Stop
-    # remove the previously added Offline Sync Service Manager. Remove-WUServiceManager does not work as of v2.0.0.0
-    $objServiceManager = New-Object -ComObject "Microsoft.Update.ServiceManager"
-    $objService = $objServiceManager.RemoveService($offlineServiceManager.ServiceID)
-
-    # parse the results
-    $updates = $missingUpdates | select kb, title, size, msrcseverity, @{Name="LastDeploymentChangeTime";Expression={$_.lastdeploymentchangetime.tostring("MM-dd-yyyy hh:mm:ss tt")}}        
     $kbarray = @()
-    $updates | %{$kbarray += $_.kb}        
+    $updateCollection | %{$kbarray += $_.kb}        
     # get installed updates
     $installedkbarray = @()
     $getinstalledUpdates = Get-HotFix
@@ -185,8 +152,8 @@ try {
     # build an object with all the update info
     $windowsupdatereporting_col = @()   
     $update_meta = [pscustomobject]@{
-        missing_update_count = $updates.Count
-        missing_update = $updates
+        missing_update_count = $updateCollection.Count
+        missing_update = $updateCollection
         missing_update_kbs = $kbarray
         installed_update_count = $getinstalledUpdates.count
         installed_update_kbs = $installedkbarray
@@ -194,8 +161,6 @@ try {
     $scan_meta = [pscustomobject]@{
         last_run_time = (Get-Date -Format "MM-dd-yyyy hh:mm:ss tt")
         wsusscn2_file_lastwritetime = (Get-Item -Path $WSUSscnCabFilePath).lastwritetime.ToString("MM-dd-yyyy hh:mm:ss tt")
-        # getting the version this way might conflict with a version loaded in a $env:PSModulePath
-        pswindowsupdate_version = (Get-Module pswindowsupdate).Version.ToString()
     }   
     $meta = [pscustomobject]@{
         scan_meta = $scan_meta
