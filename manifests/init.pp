@@ -48,15 +48,6 @@ class updatereporting_win (
 
 ){
 
-  case $pswindowsupdate_force_download {
-    true: {
-      $pswindowsupdate_force_download_set = '$true'
-  }
-    default: {
-      $pswindowsupdate_force_download_set = '$false'
-    }
-  }
-
   case $wsusscn_force_download {
     true: {
       $wsusscn_force_download_set = '$true'

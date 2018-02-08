@@ -1,6 +1,6 @@
 {
   "name": "jpi-updatereporting_win",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Joey Piccola, Taylor Vories",
   "summary": "Report on missing and installed updates on a Windows machine.",
   "license": "MIT",
