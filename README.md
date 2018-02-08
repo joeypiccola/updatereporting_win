@@ -138,6 +138,12 @@ The module's class and task work by executing a PowerShell script located in the
 
 wsusscn2.cab file downloads only occur during the Windows Schedule task execution (i.e. trigger time). Downloads also leverage the Background Intelligent Transfer Service (BITS).
 
+## Task
+
+### updatereport
+
+The task `updatereport` lets you run the underlying update report PowerShell script on-demand. Simply supply a `wsusscn_url` and the task will regenerate a current fact with missing and installed updates. That said, once you run the task puppet will need to run to pickup the created \ regenerated fact.
+
 ## Compatibility
 
 updatereporting_win has been tested on the following versions of Windows and PowerShell.
