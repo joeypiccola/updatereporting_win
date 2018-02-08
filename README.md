@@ -154,4 +154,4 @@ updatereporting_win has been tested on the following versions of Windows and Pow
 ## Design Considerations
 
 Q: Why use the wsusscn2.cab file?  
-A: PSWindowsUpdate performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
+A: The IUpdateSearcher search method performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
