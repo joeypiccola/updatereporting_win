@@ -17,8 +17,7 @@ Specify this parameter if you want to force the redownload of the WSUSscnURL.cab
 overwrite the existing copy (if any).
 
 .PARAMETER DownloadDirectory
-Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files. Defaults to 
-C:\Windows\Temp.
+Location of where to download WSUSscnURL.cab files. Defaults to C:\Windows\Temp.
 
 .PARAMETER DoNotGeneratePuppetFact
 Specify this parameter if you want to use this script independent of puppet. In which case it will

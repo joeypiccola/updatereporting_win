@@ -12,7 +12,7 @@
             "type": "Optional[Boolean]"
         },
         "downloaddirectory": {
-            "description": "Location of where to download the PSWindowsUpdate.zip and WSUSscnURL.cab files.",
+            "description": "Location of where to download WSUSscnURL.cab files.",
             "type": "Optional[String]"
         }
     }

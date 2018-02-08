@@ -13,7 +13,7 @@
     - [Download Behavior](#download-behavior)
 - [Tasks](#tasks)
     - [updatereport](#updatereport)
-- [Compatability](#compatability)
+- [Compatibility](#compatability)
     - [Limitations](#limitations)
     - [Known Issues](#known-issues)
 - [Design Considerations](#design-considerations)
