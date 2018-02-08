@@ -82,7 +82,7 @@ class updatereporting_win (
     name      => 'Windows Update Reporting (Puppet Managed Scheduled Task)',
     enabled   => $task_enabled,
     command   => 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
-    arguments => "-WindowStyle Hidden -ExecutionPolicy Bypass \"${cachedir}/lib/updatereporting_win/Invoke-WindowsUpdateReport.ps1 -pswindowsupdateurl ${pswindowsupdate_url} -wsusscnurl ${wsusscn_url} -pswindowsupdateforcedownload:${pswindowsupdate_force_download_set} -wsusscnforcedownload:${wsusscn_force_download_set} -downloaddirectory ${download_directory}\"",
+    arguments => "-WindowStyle Hidden -ExecutionPolicy Bypass \"${cachedir}/lib/updatereporting_win/Invoke-WindowsUpdateReport.ps1 -wsusscnurl ${wsusscn_url} -wsusscnforcedownload:${wsusscn_force_download_set} -downloaddirectory ${download_directory}\"",
     provider  => 'taskscheduler_api2',
     trigger   => {
       schedule    => $task_schedule,
