@@ -14,6 +14,12 @@ Convert CR LF to LF, see PCP-825 for details, updatereport.ps1.
 ## Release 0.1.3
 Removed old params and doc update.
 
+## Release 0.1.3
+Removed old params cont...
+
+## Release 0.1.5
+Doc update.
+
 **Features**
 
 **Bugfixes**
