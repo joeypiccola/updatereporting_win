@@ -42,7 +42,7 @@ puppet fact. Work with the report results via '-OutVariable report'.
 None. You cannot pipe objects to .\Invoke-WindowsUpdateReport.ps1
 
 .OUTPUTS
-PSWindowsUpdate.WindowsUpdate Only if ran with the DoNotGeneratePuppetFacts parameter. 
+System.Management.Automation.PSCustomObject Only if ran with the DoNotGeneratePuppetFacts parameter. 
 
 .NOTES
 Version:        2.0
