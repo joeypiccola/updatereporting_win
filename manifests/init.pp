@@ -4,14 +4,10 @@
 #
 # === Parameters
 #
-# [*pswindowsupdate_url*]
-#   Location of a zipped release of the PSWindowsUpdate PowerShell module.
 # *[wsusscn_url*]
 #   Location of a copy of the wsusscn2.cab.
 # [*download_directory*]
-#   [Optional] Location on the local system to place downloaded files (e.g. PSWindowsUpdate PowerShell module and wsusscn2.cab). Defaults to 'C:\Windows\Temp'.
-# [*pswindowsupdate_force_download*]
-#   [Optional] Overwrite any existing copy of the PSWindowsUpdate module that may already exist in the specified download_directory. Defaults to false.
+#   [Optional] Location on the local system to place wsusscn2.cab. Defaults to 'C:\Windows\Temp'.
 # [*wsusscn_force_download*]
 #   [Optional] Overwrite any existing copy of the wsusscn2.cab file that may already exist in the specified download_directory. Setting this value to true will override the internal logic that only downloads the wsusscn2.cab file if the last modified date has changed from the current version in the specified download_directory. Defaults to false.
 # [*task_day_of_week*]
@@ -28,7 +24,6 @@
 # === Examples
 #
 # class { 'updatereporting_win':
-#   pswindowsupdate_url => 'http://internal.corp:8081/PSWindowsUpdate.zip',
 #   wsusscn_url         => 'http://internal.corp:8081/wsusscn2.cab',
 # }
 #
@@ -42,10 +37,8 @@
 #
 class updatereporting_win (
 
-  String $pswindowsupdate_url,
   String $wsusscn_url,
   String $download_directory = 'c:/Windows/Temp',
-  Boolean $pswindowsupdate_force_download = false,
   Boolean $wsusscn_force_download = false,
   String $task_day_of_week = 'sun',
   Integer $task_every = 1,
