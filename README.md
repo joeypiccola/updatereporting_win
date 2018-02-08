@@ -1,25 +1,5 @@
 # updatereporting_win
 
-<!-- TOC -->
-- [Description](#description)
-- [Parameters](#parameters)
-- [Usage](#usage)
-    - [Examples](#examples)
-    - [The Report](#the-report)
-- [External Dependencies](#external-dependencies)
-    - [wsusscn2.cab](#wsusscn2cab)
-    - [PSWindowsUpdate](#pswindowsupdate)
-- [How it works](#how-it-works)
-    - [Download Behavior](#download-behavior)
-- [Tasks](#tasks)
-    - [updatereport](#updatereport)
-- [Compatibility](#compatability)
-    - [Limitations](#limitations)
-    - [Known Issues](#known-issues)
-- [Design Considerations](#design-considerations)
-
-<!-- /TOC -->
-
 ## Description
 
 Puppet module to report on missing and installed updates on a Windows machine.
@@ -28,7 +8,7 @@ Puppet module to report on missing and installed updates on a Windows machine.
 
  * ```wsusscn_url``` - Location of a copy of the wsusscn2.cab.
  * ```wsusscn_force_download``` - [Optional] Overwrite any existing copy of the wsusscn2.cab file that may already exist in the specified `download_directory`. Setting this value to `true` will override the internal logic that only downloads the wsusscn2.cab file if the last modified date has changed from the current version in the specified `download_directory`. Defaults to `false`.
- * ```download_directory``` - [Optional] Location on the local system to place downloaded files (e.g. PSWindowsUpdate PowerShell module and wsusscn2.cab). Defaults to 'C:\Windows\Temp'.
+ * ```download_directory``` - [Optional] Location on the local system to place downloaded files (e.g. wsusscn2.cab). Defaults to 'C:\Windows\Temp'.
  * ```task_day_of_week``` - [Optional] Which day of the week the task should run. The day must either  be `mon`, `tues`, `wed`, `thurs`, `fri`, `sat`, `sun`, or `all`. This option is only applicable when `task_schedule` is set to `weekly`. Defaults to `sun`.
  * ```task_every``` - [Optional] How often the task should run, as a number of days or weeks. Defaults to `1`.
  * ```task_schedule``` - [Optional] What kind of trigger this is. Valid values are `daily` and `weekly`. Defaults to `weekly`.
