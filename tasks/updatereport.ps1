@@ -1,12 +1,6 @@
 [CmdletBinding()]
 Param (
     [Parameter(Mandatory)]
-    [System.Uri]$PSWindowsUpdateURL
-    ,
-    [Parameter()]
-    [string]$PSWindowsUpdateForceDownload = 'false'
-    ,
-    [Parameter(Mandatory)]
     [System.Uri]$WSUSscnURL
     ,
     [Parameter()]
@@ -22,8 +16,6 @@ Param (
 )
 
 $invokeParams = @{
-    PSWindowsUpdateURL = $PSWindowsUpdateURL
-    PSWindowsUpdateForceDownload = if ($PSWindowsUpdateForceDownload -eq 'true') {$true} else {$false}
     WSUSscnURL = $WSUSscnURL
     WSUSscnForceDownload = if ($WSUSscnForceDownload -eq 'true') {$true} else {$false}
     DownloadDirectory = $DownloadDirectory
