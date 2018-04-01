@@ -44,7 +44,7 @@ None. You cannot pipe objects to .\Invoke-WindowsUpdateReport.ps1
 System.Management.Automation.PSCustomObject Only if ran with the DoNotGeneratePuppetFacts parameter. 
 
 .NOTES
-Version:        2.0
+Version:        2.1
 Author:         Joey Piccola
 Creation Date:  01.31.18
 Purpose/Change: Used by the puppet module updatereporting_win
@@ -103,7 +103,7 @@ try {
         $remoteWSUSscnFile = Get-WebFileLastModified -url $WSUSscnURL
         # if the wsusscn2.cab file in the webrepo does not match the local version then redownload it
         if ($localwsusscnFile -ne $remoteWSUSscnFile) {
-            Remove-Item -Path$WSUSscnCabFilePath -Force -Confirm:$false -ErrorAction Stop
+            Remove-Item -Path $WSUSscnCabFilePath -Force -Confirm:$false -ErrorAction Stop
             Start-BitsTransfer -Source $WSUSscnURL -Destination $DownloadDirectory -ErrorAction Stop
         }
     }
