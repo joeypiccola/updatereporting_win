@@ -17,7 +17,9 @@ Puppet module to report on missing and installed updates on a Windows machine.
 
 ## Usage
 
-At a minimum supply the download location the wsusscn2.cab file. It is recommended not to schedule the task too often because the missing update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~200MB wsusscn2.cab file). As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
+At a minimum supply the download location the wsusscn2.cab file. It is recommended not to schedule the task too often because the missing update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~400MB wsusscn2.cab file)**. As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
+
+** see limitation #2
 
 ### Examples
 
