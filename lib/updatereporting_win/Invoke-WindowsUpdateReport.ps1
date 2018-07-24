@@ -44,9 +44,10 @@ None. You cannot pipe objects to .\Invoke-WindowsUpdateReport.ps1
 System.Management.Automation.PSCustomObject Only if ran with the DoNotGeneratePuppetFacts parameter.
 
 .NOTES
-Version:        2.1
+Version:        2.2
 Author:         Joey Piccola
 Creation Date:  01.31.18
+Last Modified:  07.24.18
 Purpose/Change: Used by the puppet module updatereporting_win
 #>
 
