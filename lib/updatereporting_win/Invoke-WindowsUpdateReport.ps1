@@ -47,7 +47,7 @@ System.Management.Automation.PSCustomObject Only if ran with the DoNotGeneratePu
 Version:        2.2
 Author:         Joey Piccola
 Creation Date:  01.31.18
-Last Modified:  07.24.18
+Last Modified:  07.25.18
 Purpose/Change: Used by the puppet module updatereporting_win
 #>
 
@@ -68,8 +68,11 @@ Param (
 )
 
 $DownloadDirectory = $DownloadDirectory.Replace('/','\')
+Write-Verbose "Download directory: $DownloadDirectory"
 $WSUSscnCabFile =  $WSUSscnURL.ToString().Split('/')[$WSUSscnURL.ToString().split('/').count-1]
+Write-Verbose "Parsed WSUSscnCabFile: $WSUSscnCabFile"
 $WSUSscnCabFilePath = Join-Path -Path $DownloadDirectory -ChildPath $WSUSscnCabFile
+Write-Verbose "Parsed WSUSscnCabFilePath: $WSUSscnCabFilePath"
 
 #region helperFunctions
 function Get-WebFileLastModified($url) {
@@ -95,9 +98,11 @@ try {
     if (!(Test-Path -Path $WSUSscnCabFilePath) -or (($WSUSscnForceDownload -eq $true) -and (Test-Path -Path $WSUSscnCabFilePath))) {
         # remove the wsusscn2.cab if it exists
         if (Test-Path -Path $WSUSscnCabFilePath) {
+            Write-Verbose "Trying to remove $WSUSscnCabFilePath"
             Remove-Item -Path $WSUSscnCabFilePath -Force -Confirm:$false -ErrorAction Stop
         }
         # download the wsusscn2.cab
+        Write-Verbose "Trying to download $WSUSscnURL to $DownloadDirectory"
         Start-BitsTransfer -Source $WSUSscnURL -Destination $DownloadDirectory -ErrorAction Stop
     } else {
         $localwsusscnFile = (Get-Item -Path $WSUSscnCabFilePath).LastWriteTime
@@ -110,11 +115,14 @@ try {
         }
         # if the wsusscn2.cab file in the webrepo does not match the local version then redownload it
         if ($localwsusscnFile -ne $remoteWSUSscnFile) {
+            Write-Verbose "Trying to remove $WSUSscnCabFilePath"
             Remove-Item -Path $WSUSscnCabFilePath -Force -Confirm:$false -ErrorAction Stop
+            Write-Verbose "Trying to download $WSUSscnURL to $DownloadDirectory"
             Start-BitsTransfer -Source $WSUSscnURL -Destination $DownloadDirectory -ErrorAction Stop
         }
     }
 
+    Write-Verbose "Configuring Windows Update API Agent for Offline Sync Service."
     # Windows Update API Agent, https://msdn.microsoft.com/en-us/library/windows/desktop/aa387099(v=vs.85).aspx
     # Adds or removes the registration of the update service with Windows Update Agent or Automatic Updates.
     $updateServiceManager = New-Object -ComObject 'Microsoft.Update.ServiceManager'
@@ -135,6 +143,7 @@ try {
     # Removes a service registration from WUA.
     $objService = $updateServiceManager.RemoveService($updateService.ServiceID)
 
+    Write-Verbose "Parsing Windows Update API Agent results."
     $updateCollection = @()
     $missingUpdates | %{
         $updateObject = $null
@@ -147,7 +156,7 @@ try {
         }
         $updateCollection += $updateObject
     }
-
+    Write-Verbose "Building results data collection."
     $kbarray = @()
     $updateCollection | %{$kbarray += $_.kb}
     # get installed updates
@@ -178,6 +187,7 @@ try {
     $windowsupdatereporting_col += $fact_name
 
     if (!($DoNotGeneratePuppetFact)) {
+        Write-Verbose "Creating updatereporting.json Puppet fact."
         $factContent = $windowsupdatereporting_col | ConvertTo-Json -Depth 4
         $factPath = 'C:\ProgramData\PuppetLabs\facter\facts.d\updatereporting.json'
         # force UTF8 with no BOM to make facter happy (Out-File -Encoding UTF8 does not work, Add-Content does not work, >> does not work)
@@ -188,6 +198,15 @@ try {
     }
 
 } catch {
+    # ensure the Offline Sync Service we added has been removed
+    $offlineSyncServiceExists = $updateServiceManager.Services | ?{$_.ServiceID -eq $updateService.ServiceID}
+    if ($offlineSyncServiceExists) {
+        try {
+            $objService = $updateServiceManager.RemoveService($updateService.ServiceID)
+        } catch {
+            Write-Error $_.Exception.Message
+        }
+    }
     Write-Error $_.Exception.Message
     exit 1
 }
