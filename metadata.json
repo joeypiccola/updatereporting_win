@@ -1,12 +1,12 @@
 {
   "name": "jpi-updatereporting_win",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "author": "Joey Piccola, Taylor Vories",
   "summary": "Report on missing and installed updates on a Windows machine.",
   "license": "MIT",
   "source": "https://github.com/joeypiccola/updatereporting_win",
   "project_page": "https://github.com/joeypiccola/updatereporting_win",
-  "issues_url": "https://github.com/joeypiccola/updatereporting_win/issues",  
+  "issues_url": "https://github.com/joeypiccola/updatereporting_win/issues",
   "dependencies": [
     { "name": "puppetlabs/scheduled_task", "version_requirement": ">= 0.1.0" }
   ],

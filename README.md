@@ -17,7 +17,9 @@ Puppet module to report on missing and installed updates on a Windows machine.
 
 ## Usage
 
-At a minimum supply the download location the wsusscn2.cab file. It is recommended not to schedule the task too often because the missing update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~200MB wsusscn2.cab file). As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
+At a minimum supply the download location the wsusscn2.cab file. It is recommended not to schedule the task too often because the missing update scan requires quite a bit of compute (not to mention the possibility of re-downloading the ~400MB wsusscn2.cab file)**. As noted in the first example below the default configuration will create a scheduled task to run a scan once a week on Sunday between the hours of 12:00AM and 5:59AM.
+
+** see limitation #2
 
 ### Examples
 
@@ -105,7 +107,7 @@ The update report is consumed as an external fact named `updatereporting_win`. A
 
 ### wsusscn2.cab
 
-This module leverages a current copy of the Windows Update offline scan file. This file can be downloaded via http://go.microsoft.com/fwlink/?LinkID=74689. It is suggested to download this ~200MB file and host it internally vs. devising a way to pull it form the Internet for each puppet node.
+This module leverages a current copy of the Windows Update offline scan file. This file can be downloaded via http://go.microsoft.com/fwlink/?LinkID=74689. It is suggested to download this ~400MB file and host it internally vs. devising a way to pull it form the Internet for each puppet node.
 
 
 **Note**: The parameter `wsusscn_url` is not intended to be used with the http://go.microsoft.com/fwlink/?LinkID=74689 URL. The underlying script expects a URL with a `.cab` file.
@@ -136,7 +138,7 @@ updatereporting_win has been tested on the following versions of Windows and Pow
 ### Limitations
 
 1. Time of day scheduling is currently limited to a random time between 12:00AM and 5:59AM.
-2. The PowerShell script used to determine the remote wsusscn2.cab file's last modified date has been tested on IIS and Artifactory. Not all web servers will provide a last modified date when queried.
+2. The PowerShell script used to determine the remote wsusscn2.cab file's last modified date has been tested on IIS. Not all web servers will provide a last modified date when queried. If the last modified date is unable to be detected then the script will proceed to download the file again.
 
 ### Known Issues
 
@@ -144,5 +146,5 @@ updatereporting_win has been tested on the following versions of Windows and Pow
 
 ## Design Considerations
 
-Q: Why use the wsusscn2.cab file?  
+Q: Why use the wsusscn2.cab file?
 A: The IUpdateSearcher search method performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
