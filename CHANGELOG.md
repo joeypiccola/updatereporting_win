@@ -33,6 +33,7 @@ Fixed issue for when remote wsusscn2.cab file is newer than local file and Power
 **Known Issues**
 
 ## Release 0.1.7
+Manually shuffle files to update to pdk 1.6.0.
 
 **Features**
 
