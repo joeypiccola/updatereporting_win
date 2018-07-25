@@ -26,7 +26,7 @@
       "version_requirement": ">= 4.7.0 < 6.0.0"
     }
   ],
-  "pdk-version": "1.1.0",
-  "template-url": "file://C:/PROGRA~1/PUPPET~1/DevelopmentKit/share/cache/pdk-module-template.git",
-  "template-ref": "heads/master-0-g54e88a4"
+  "pdk-version": "1.6.0",
+  "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
+  "template-ref": "1.6.0-0-gf5564c0"
 }
