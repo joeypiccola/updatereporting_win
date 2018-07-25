@@ -31,3 +31,17 @@ Fixed issue for when remote wsusscn2.cab file is newer than local file and Power
 > A parameter cannot be found that matches parameter name 'Path$WSUSscnCabFilePath'.".
 
 **Known Issues**
+
+## Release 0.1.7
+
+**Features**
+
+Add logic to clean up Offline Sync Service if in the event we add the service and error before removing it as part of the standard API logic.
+
+**Bugfixes**
+
+Add exception handling for when Invoke-WindowsUpdateReport.ps1 is unable to pull the LastModified date from the wsusscn2.cab file. Previously the script `Invoke-WindowsUpdateReport.ps1` would exit 1 with the following error.
+
+> Exception calling "GetResponse" with "0" argument(s): "The underlying connection was closed: An unexpected error occurred on a receive."
+
+**Known Issues**
