@@ -152,7 +152,6 @@ try {
             LastDeploymentChangeTime = $_.LastDeploymentChangeTime.tostring("MM-dd-yyyy hh:mm:ss tt")
             Size = "$([math]::round($_.maxdownloadsize / 1MB,0))MB"
             MsrcSeverity = $_.MsrcSeverity
-            RebootRequired = $_.RebootRequired
             Title = $_.Title
         }
         $updateCollection += $updateObject
