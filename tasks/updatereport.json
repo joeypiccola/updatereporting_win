@@ -8,12 +8,16 @@
             "type": "String"
         },
         "wsusscnforcedownload": {
-            "description": "Specify true want to force the redownload of the WSUSscnURL.cab. This will overwrite the existing copy (if any).",
+            "description": "Specify true to force the redownload of the WSUSscnURL.cab. This will overwrite the existing copy (if any).",
             "type": "Optional[Boolean]"
         },
         "downloaddirectory": {
             "description": "Location of where to download WSUSscnURL.cab files.",
             "type": "Optional[String]"
+        },
+        "uploadfactswhendone": {
+            "description": "Specify true to upload the report back to the Puppet master.",
+            "type": "Optional[Boolean]"
         }
     }
 }
