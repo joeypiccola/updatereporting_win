@@ -4,11 +4,14 @@ Param (
     [System.Uri]$WSUSscnURL
     ,
     [Parameter()]
-    [string]$WSUSscnForceDownload = 'false'
+    [boolean]$WSUSscnForceDownload = $false
     ,
     [Parameter()]
     [ValidateScript({Test-Path -Path $_ -IsValid})]
     [String]$DownloadDirectory = 'C:\Windows\Temp'
+    ,
+    [Parameter()]
+    [boolean]$UploadFactsWhenDone = $false
     ,
     # not used for tasks
     [Parameter()]
@@ -17,9 +20,11 @@ Param (
 
 $invokeParams = @{
     WSUSscnURL = $WSUSscnURL
-    WSUSscnForceDownload = if ($WSUSscnForceDownload -eq 'true') {$true} else {$false}
+    WSUSscnForceDownload = $WSUSscnForceDownload
     DownloadDirectory = $DownloadDirectory
 }
 
 $invokeReport = Join-Path -Path $env:ProgramData -ChildPath '/PuppetLabs/puppet/cache/lib/updatereporting_win/Invoke-WindowsUpdateReport.ps1'
 . $invokeReport @invokeParams
+
+if ($UploadFactsWhenDone) { & "$Env:ProgramFiles\Puppet Labs\Puppet\Bin\puppet.bat" facts upload }
