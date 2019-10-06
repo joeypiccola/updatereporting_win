@@ -1,4 +1,7 @@
 # updatereporting_win
+|AppVeyor|Forge Version|Forge PDK Version|Forge Downloads|
+|--------|-------------|-----------------|---------------|
+[![AppVeyor][appveyor-badge]][appveyor] | [![Puppet Forge][forge-version-badge]][forge] | [![Puppet Forge][forge-pdk-badge]][forge] | [![Puppet Forge][forge-downloads-badge]][forge]
 
 ## Description
 
@@ -148,3 +151,13 @@ updatereporting_win has been tested on the following versions of Windows and Pow
 
 Q: Why use the wsusscn2.cab file?
 A: The IUpdateSearcher search method performs a much faster scan when using an offline scan file. Also, having hundreds and potentially thousands of machines query Microsoft doesn't scale (nor does it work in an air gapped environment).
+
+## License
+Kms_win is released under the [MIT license](http://www.opensource.org/licenses/MIT).
+
+[appveyor]: https://ci.appveyor.com/project/joeypiccola/updatereporting-win
+[appveyor-badge]: https://ci.appveyor.com/api/projects/status/rp3sqs9a0aga3rbo/branch/master?svg=true&passingText=master%20-%20PASSING&pendingText=master%20-%20PENDING&failingText=master%20-%20FAILING
+[forge]: https://forge.puppet.com/jpi/updatereporting_win
+[forge-downloads-badge]: https://img.shields.io/puppetforge/dt/jpi/updatereporting_win
+[forge-pdk-badge]: https://img.shields.io/puppetforge/pdk-version/jpi/updatereporting_win
+[forge-version-badge]: https://img.shields.io/puppetforge/v/jpi/updatereporting_win
