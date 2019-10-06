@@ -57,9 +57,21 @@ class updatereporting_win (
     }
   }
 
-  $min = fqdn_rand(59)
-  $hour = fqdn_rand(3)+1
+  $min = sprintf('%02d',fqdn_rand(59))
+  $hour = sprintf('%02d', fqdn_rand(3)+1)
   $cachedir = $facts['puppet_vardir']
+
+  $trigger_base = {
+    schedule    => $task_schedule,
+    every       => $task_every,
+    start_time  => "${hour}:${min}",
+  }
+  if ($task_schedule == 'weekly') {
+    $trigger_weekly = { day_of_week => $task_day_of_week }
+  } else {
+    $trigger_weekly = {}
+  }
+  $trigger = merge($trigger_base, $trigger_weekly)
 
   scheduled_task { 'updatereporting_win':
     ensure    => $task_ensure,
@@ -68,11 +80,6 @@ class updatereporting_win (
     command   => 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
     arguments => "-WindowStyle Hidden -ExecutionPolicy Bypass \"${cachedir}/lib/updatereporting_win/Invoke-WindowsUpdateReport.ps1 -wsusscnurl ${wsusscn_url} -wsusscnforcedownload:${wsusscn_force_download_set} -downloaddirectory ${download_directory}\"",
     provider  => 'taskscheduler_api2',
-    trigger   => {
-      schedule    => $task_schedule,
-      every       => $task_every,
-      day_of_week => $task_day_of_week,
-      start_time  => "${hour}:${min}",
-    }
+    trigger   => $trigger
   }
 }
